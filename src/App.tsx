@@ -3,15 +3,16 @@ import { initializeApp } from './services/appService'
 import type { Task, TaskAttempt } from './types/database'
 import SlotMachine from './components/casino/SlotMachine'
 import Admin from './components/admin/Admin'
+import { HashRouter, Routes, Route } from 'react-router-dom'
 
 function App() {
-  if (window.location.pathname === '/kazik-quest/admin') {
-    return (
-      <main className="app">
-        <Admin />
-      </main>
-    )
-  }
+  // if (window.location.pathname === '/kazik-quest/admin') {
+  //   return (
+  //     <main className="app">
+  //       <Admin />
+  //     </main>
+  //   )
+  // }
 
   const initialized = useRef(false)
 
@@ -54,48 +55,55 @@ function App() {
   }, [])
 
   return (
-    <main className="app">
-      {loading && <div>Загрузка...</div>}
-
-      {!loading && tasks.length === 0 && (
-        <div>Нет доступных заданий</div>
-      )}
-
-      {!loading && sessionId && tasks.length > 0 && (
-        <SlotMachine
-          tasks={tasks}
-          sessionId={sessionId}
-          activeAttempts={activeAttempts}
-          completedAttempts={completedAttempts}
-          completedTaskIds={completedTaskIds}
-          onAttemptCreated={(attempt) => {
-            setActiveAttempts((prev) => [
-              attempt,
-              ...prev,
-            ])
-          }}
-          onAttemptFinished={(attemptId) => {
-            setActiveAttempts((prev) =>
-              prev.filter(
-                (attempt) => attempt.id !== attemptId
-              )
-            )
-          }}
-          onAttemptCompleted={(attempt) => {
-            setCompletedAttempts((prev) => [
-              attempt,
-              ...prev,
-            ])
-          }}
-          onTaskCompleted={(taskId) => {
-            setCompletedTaskIds((prev) => [
-              ...prev,
-              taskId,
-            ])
-          }}
+    <HashRouter>
+      <Routes>
+        <Route
+          path="/admin"
+          element={
+            <main className="app">
+              <Admin />
+            </main>
+          }
         />
-      )}
-    </main>
+
+        <Route
+          path="/"
+          element={
+            <main className="app">
+              {loading && <div>Загрузка...</div>}
+
+              {!loading && tasks.length === 0 && (
+                <div>Нет доступных заданий</div>
+              )}
+
+              {!loading && sessionId && tasks.length > 0 && (
+                <SlotMachine
+                  tasks={tasks}
+                  sessionId={sessionId}
+                  activeAttempts={activeAttempts}
+                  completedAttempts={completedAttempts}
+                  completedTaskIds={completedTaskIds}
+                  onAttemptCreated={(attempt) => {
+                    setActiveAttempts((prev) => [attempt, ...prev])
+                  }}
+                  onAttemptFinished={(attemptId) => {
+                    setActiveAttempts((prev) =>
+                      prev.filter((attempt) => attempt.id !== attemptId)
+                    )
+                  }}
+                  onAttemptCompleted={(attempt) => {
+                    setCompletedAttempts((prev) => [attempt, ...prev])
+                  }}
+                  onTaskCompleted={(taskId) => {
+                    setCompletedTaskIds((prev) => [...prev, taskId])
+                  }}
+                />
+              )}
+            </main>
+          }
+        />
+      </Routes>
+    </HashRouter>
   )
 }
 
