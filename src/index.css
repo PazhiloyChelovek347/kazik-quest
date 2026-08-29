@@ -699,3 +699,26 @@ body {
 .active-task-skipped .active-task-meta {
     color: #665c62;
 }
+
+.admin {
+    width: min(700px, 100%);
+}
+
+.admin h1,
+.admin h2 {
+    margin-top: 0;
+}
+
+.admin input,
+.admin textarea,
+.admin select {
+    width: 100%;
+    display: block;
+    margin-bottom: 10px;
+    padding: 10px;
+}
+
+.admin button {
+    margin-bottom: 20px;
+    padding: 10px 16px;
+}

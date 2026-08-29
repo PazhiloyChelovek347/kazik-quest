@@ -2,8 +2,17 @@ import { useEffect, useRef, useState } from 'react'
 import { initializeApp } from './services/appService'
 import type { Task, TaskAttempt } from './types/database'
 import SlotMachine from './components/casino/SlotMachine'
+import Admin from './components/admin/Admin'
 
 function App() {
+  if (window.location.pathname === '/kazik-quest/admin') {
+    return (
+      <main className="app">
+        <Admin />
+      </main>
+    )
+  }
+
   const initialized = useRef(false)
 
   const [sessionId, setSessionId] = useState<string | null>(null)

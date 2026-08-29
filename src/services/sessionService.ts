@@ -46,3 +46,54 @@ export function setSessionIdInUrl(sessionId: string): void {
 
   window.history.replaceState({}, '', url)
 }
+
+export async function getSessions(): Promise<Session[]> {
+  const { data, error } = await supabase
+    .from('sessions_kazik')
+    .select('*')
+    .order('created_at', { ascending: false })
+
+  if (error) {
+    throw error
+  }
+
+  return data
+}
+
+export async function createSessionWithSet(
+  setId: string,
+): Promise<Session> {
+  const session = await createSession()
+
+  const { error } = await supabase
+    .from('session_sets_kazik')
+    .insert({
+      session_id: session.id,
+      set_id: setId,
+    })
+
+  if (error) throw error
+
+  return session
+}
+
+export async function setSessionSet(
+  sessionId: string,
+  setId: string,
+): Promise<void> {
+  const { error } = await supabase
+    .from('session_sets_kazik')
+    .upsert(
+      {
+        session_id: sessionId,
+        set_id: setId,
+      },
+      {
+        onConflict: 'session_id',
+      },
+    )
+
+  if (error) {
+    throw error
+  }
+}

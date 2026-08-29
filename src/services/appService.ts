@@ -4,7 +4,10 @@ import {
   getSessionIdFromUrl,
   setSessionIdInUrl,
 } from './sessionService'
-import { getActiveTasks } from './taskService'
+import {
+  getSetForSession,
+  getTasksForSet,
+} from './setService'
 import { createEvent } from './eventService'
 import type {
   Session,
@@ -16,6 +19,7 @@ import {
   getCompletedTaskIds,
   getFinishedAttempts
 } from './attemptService'
+import { getActiveTasks } from './taskService'
 
 interface AppData {
   session: Session
@@ -31,7 +35,11 @@ export async function initializeApp(): Promise<AppData> {
 
   if (sessionId) {
     const session = await getSession(sessionId)
-    const tasks = await getActiveTasks()
+    const taskSet = await getSetForSession(session.id)
+
+    const tasks = taskSet
+      ? await getTasksForSet(taskSet.id)
+      : await getActiveTasks()
     const activeAttempts =
       await getActiveAttempts(session.id)
     const completedAttempts =
