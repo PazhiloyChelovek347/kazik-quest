@@ -641,16 +641,26 @@ body {
 }
 
 @media (max-width: 700px) {
+    .app {
+        align-items: flex-start;
+    }
+
+    .casino-layout {
+        flex-direction: column;
+        align-items: center;
+        gap: 24px;
+    }
+
+    .slot-machine {
+        order: 1;
+    }
+
     .active-tasks {
         width: min(420px, 100%);
         height: auto;
         max-height: 330px;
         position: static;
         order: 2;
-    }
-
-    .slot-machine {
-        order: 1;
     }
 }
 
